@@ -22,4 +22,16 @@
 ## Acess the Airflow from restapi
 * 1. To get the list of your current dags and its status, run the following line (in my case, I am using the default credentials):
     - curl -X GET --user "airflow:airflow" "http://localhost:8080/api/v1/dags"
+
+## Configure connection
+* In order to execute the named dag processing, you need to configure connection once the dag creates a table in postgres database. To do this, execute the following steps:
+    - 1.1 Access the airflow UI: http://localhost:8080/
+    - 1.2 Acces the Admin - Connections: http://0.0.0.0:8080/connection/list/
     
+    - 2.1 Add new connection: http://0.0.0.0:8080/connection/add
+        - Connection Id: postgres;
+        - Host: postgres;
+        - Login: airflow;
+        - Password: airflow;
+        - Port: 5432;
+        - All other fields can be left blank.
