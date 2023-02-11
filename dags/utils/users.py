@@ -1,14 +1,26 @@
 import json
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from pandas import json_normalize
 
-def process_user(ti):
-    user = ti.xcom_pull(task_ids="extract_user")
-    user = user["results"][0]
+def _process_user(ti):
+    user = ti.xcom_pull(task_ids="extract_user_info")
+    user = user["results"]
+    print(f"Aqui {user}")
     processed_user = json_normalize({
-        "first_name": user["name"]["first"],
-        "last_name": user["name"]["last"],
-        "username": user["login"]["username"],
-        "password": user["user"]["password"],
-        "email": user["email"]
+        "first_name": user[0]["name"]["first"],
+        "last_name": user[0]["name"]["last"],
+        "username": user[0]["login"]["username"],
+        "password": user[0]["login"]["password"],
+        "email": user[0]["email"]
     })
-    process_user.to_csv("/tmp/processed_user.csv", index=None, header=False)
+    processed_user.to_csv("/tmp/processed_user.csv", index=None, header=False)
+
+
+def _store_user():
+    hook = PostgresHook(
+        postgres_conn_id="postgres",
+    )
+    hook.copy_expert(
+        sql="COPY users FROM stdin WITH DELIMITER as ','",
+        filename="/tmp/processed_user.csv"
+    )
