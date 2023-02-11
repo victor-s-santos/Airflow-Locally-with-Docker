@@ -2,9 +2,11 @@ from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import SimpleHttpOperator
+from airflow.operators.python import PythonOperator
+
+from utils.users import process_user as process_user_task
 
 from datetime import datetime
-import json
 
 with DAG(dag_id='processing', start_date=datetime(2022, 1, 1), 
         schedule_interval='@daily', catchup=False) as dag:
@@ -37,4 +39,9 @@ with DAG(dag_id='processing', start_date=datetime(2022, 1, 1),
         response_filter=lambda response: json.loads(response.text),
         log_response=True
 
+    )
+
+    process_user = PythonOperator(
+        task_id="process_user",
+        python_callable=process_user_task
     )
