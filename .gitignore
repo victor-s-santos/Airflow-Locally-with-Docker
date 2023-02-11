@@ -3,3 +3,4 @@
 *.pyc
 *.env
 logs/
+mongodb-data/

@@ -3,8 +3,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.operators.python import PythonOperator
-from utils.users import _process_user
-from utils.users import _store_user
+from utils.users import _process_user, _store_user, _insert_in_mongo
 from datetime import datetime
 import json
 
@@ -51,4 +50,9 @@ with DAG(dag_id='processing', start_date=datetime(2022, 1, 1),
         python_callable=_store_user
     )
 
-    create_table >> is_api_avaliable >> extract_user_info >> process_user >> store_user
+    insert_in_mongo = PythonOperator(
+        task_id="insert_in_mongo",
+        python_callable=_insert_in_mongo
+    )
+
+    create_table >> is_api_avaliable >> extract_user_info >> process_user >> store_user >> insert_in_mongo
