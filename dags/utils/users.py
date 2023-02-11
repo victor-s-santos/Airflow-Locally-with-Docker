@@ -1,11 +1,11 @@
 import json
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 from pandas import json_normalize
+from pymongo import MongoClient
 
 def _process_user(ti):
     user = ti.xcom_pull(task_ids="extract_user_info")
     user = user["results"]
-    print(f"Aqui {user}")
     processed_user = json_normalize({
         "first_name": user[0]["name"]["first"],
         "last_name": user[0]["name"]["last"],
@@ -24,3 +24,11 @@ def _store_user():
         sql="COPY users FROM stdin WITH DELIMITER as ','",
         filename="/tmp/processed_user.csv"
     )
+
+def _insert_in_mongo(ti):
+    print("Inserindo dados no mongo")
+    local_client = MongoClient("mongodb://localhost:27017/")
+    db_name = local_client["local_database"]
+
+    db_name["backup"].insert_one({"status": "Enviado com sucesso!"})
+    print(f"The user {user[0]['name']} has been inserted in mongodb!")
