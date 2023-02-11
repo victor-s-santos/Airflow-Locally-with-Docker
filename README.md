@@ -30,8 +30,16 @@
     
     - 2.1 Add new connection: http://0.0.0.0:8080/connection/add
         - Connection Id: postgres;
+        - Connection Type: Postgres;
         - Host: postgres;
         - Login: airflow;
         - Password: airflow;
         - Port: 5432;
         - All other fields can be left blank.
+
+    - 2.2 Add new connection: http://0.0.0.0:8080/connection/add
+            - Connection Id: user_api;
+            - Connection Type: HTTP;
+            - Host: https://randomuser.me/;
+            - All other fields can be left blank.
+
