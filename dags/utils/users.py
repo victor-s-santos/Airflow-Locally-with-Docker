@@ -27,8 +27,9 @@ def _store_user():
 
 def _insert_in_mongo(ti):
     print("Inserindo dados no mongo")
-    local_client = MongoClient("mongodb://localhost:27017/")
+    local_client = MongoClient("mongodb://172.18.0.4:27017/")
+    #para pegar o valor do localhost, dar um inspect no container do mongo
     db_name = local_client["local_database"]
 
     db_name["backup"].insert_one({"status": "Enviado com sucesso!"})
-    print(f"The user {user[0]['name']} has been inserted in mongodb!")
+    print(f"The user has been inserted in mongodb!")
