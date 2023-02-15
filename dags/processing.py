@@ -3,7 +3,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.operators.python import PythonOperator
-from utils.users import _process_user, _store_user, _insert_in_mongo
+from tasks.users import _process_user, _store_user, _insert_in_mongo
 from datetime import datetime
 import json
 
